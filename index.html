@@ -23,12 +23,11 @@
       background: white;
       padding: 2rem;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      box-shadow: none;
     }
     h2 {
       font-size: 1.75rem;
       margin-bottom: 1.25rem;
-      text-transform: uppercase;
     }
     label {
       font-weight: 600;
@@ -49,8 +48,8 @@
       transition: border-color 0.2s, box-shadow 0.2s;
     }
     input:focus, select:focus, textarea:focus {
-      border-color: #d1d5db;
-      box-shadow: 0 0 0 1px #d1d5db;
+      border-color: #9ca3af;
+      box-shadow: none;
       outline: none;
     }
     input[type="date"]::-webkit-datetime-edit,
@@ -91,7 +90,7 @@
 </head>
 <body>
   <form id="serviceForm">
-    <h2>Service Request Form</h2>
+    <h2 style="text-transform: none;">Service Request Form</h2>
 
     <label>Company Name <input type="text" name="company" required></label>
     <label>Address <input type="text" name="address" required></label>
