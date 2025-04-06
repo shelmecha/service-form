@@ -32,9 +32,10 @@
     label {
       font-weight: 600;
       display: block;
-      margin-top: 1.5rem;
+      margin-top: 1.25rem;
       text-transform: uppercase;
-      font-size: 0.875rem;
+      font-size: 0.75rem;
+      margin-bottom: 0.25rem;
     }
     input, select, textarea {
       width: 100%;
@@ -63,7 +64,9 @@
     }
     button {
       margin-top: 2rem;
-      width: auto;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
       padding: 0.75rem 1.5rem;
       background-color: #2f2f2f;
       color: white;
@@ -106,7 +109,7 @@
     <div id="boothFields"></div>
 
     <label>Booth Installation or Delivery Date <input type="date" required></label>
-    <small>We need this to check if the booth is still under warranty and to identify the booth series for future improvements.</small>
+    <small style="margin-left: 2px;">We need this to check if the booth is still under warranty and to identify the booth series for future improvements.</small>
 
     <label>Booth Serial Number (optional) <input type="text"></label>
     <label>Point of Contact <input type="text" required></label>
