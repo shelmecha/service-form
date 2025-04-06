@@ -147,8 +147,8 @@ button:hover {
 
     <label>Company Name <span style="color: red">*</span><input type="text" name="company" required></label>
     <label>Address <span style="color: red">*</span><input type="text" name="address" required></label>
-    <label>Number of Booths with Issues <span style="color: red">*</span><select id="boothCount" required>
-        <option value="" disabled selected style="color: #999;">Select the number of booths affected</option>
+    <label>Number of Booths with Issues <span style="color: red">*</span><select id="boothCount" required style="color: #999;">
+        <option value="" disabled selected>Select the number of booths affected</option>
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -205,6 +205,8 @@ button:hover {
     const boothFields = document.getElementById('boothFields');
 
     boothCountSelect.addEventListener('change', () => {
+      // Reset style color once user selects a value
+      boothCountSelect.style.color = '#2f2f2f';
       boothFields.innerHTML = '';
       const count = parseInt(boothCountSelect.value);
       for (let i = 1; i <= count; i++) {
@@ -222,7 +224,7 @@ button:hover {
               ${Object.keys(issueTypes).map(it => `<option value="${it}">${it}</option>`).join('')}
             </select>
           </label>
-          <label>Sub-Issue Type <select id="subIssue${i}" required>
+          <label>Sub-Issue Type <select id="subIssue${i}" required style="color: #999;">
               <option value="" disabled selected style="color: #999;">Select a more specific issue</option>
             </select>
           </label>
@@ -231,7 +233,60 @@ button:hover {
         boothFields.appendChild(boothDiv);
   }
 
-  subIssueSelect.addEventListener('change', function () {
+  
+}
+function updateSubIssues(selectElem, subIssueId) {
+  const selectedType = selectElem.value;
+  const subIssueSelect = document.getElementById(subIssueId);
+  const descriptionMap = {
+    "Misalignment": "Door doesn’t sit properly within the frame; uneven gaps",
+    "Hitting Frame": "Door makes contact with frame when opening/closing",
+    "Does not Close Fully": "Door won’t latch or stay closed",
+    "Hard to Open/Close": "Requires excessive force to move",
+    "Hinge Defect": "Loose, squeaky, or bent hinges",
+    "Handle Issue": "Handle is loose, missing, or not functioning properly",
+    "Door Closer Malfunction": "Door doesn’t soft-close or swings too fast",
+    "Door Scratched/Damaged": "Cosmetic or transit damage",
+    "Booth not powering on": "Entire booth non-functional at delivery or post-install",
+    "Outlet Not Working": "No output from under-desk plug",
+    "Intermittent Power Loss": "Power cuts in/out unexpectedly",
+    "Fan or Light Not Receiving Power": "Localized issue affecting components",
+    "Light Not Working": "Light does not turn on",
+    "Flickering Light": "Light flickers intermittently",
+    "Poor Brightness": "Light appears dim or uneven",
+    "Switch Not Functioning": "Switch doesn't respond when toggled",
+    "Light Cover Issue": "Light cover is loose, missing, or cracked",
+    "Fan Not Working": "Fan does not spin or function",
+    "Fan Operating at Low Power": "Fan is weak and barely moves air",
+    "Fan Speed Not Adjustable": "Dial or control does not change fan speed",
+    "Fan Turns Off Unexpectedly": "Fan shuts off randomly during use",
+    "Fan Noisy / Rattling": "Excessive noise or vibration",
+    "Overheating / Poor Ventilation": "Airflow issues making booth hot",
+    "Panel Misalignment": "Panels are uneven or not flush",
+    "Panel Coming Loose": "Panel is detaching or not secure",
+    "Glass Cracked or Broken": "Visible cracks or complete break",
+    "Scratched Glass": "Minor or deep surface scratches",
+    "Uneven floor leveling": "Booth tilts or rocks due to floor",
+    "Missing screws or hardware": "Some parts were not included"
+  };
+
+  subIssueSelect.innerHTML = '<option value="" disabled selected style="color: #999;">Select a more specific issue</option>' +
+    issueTypes[selectedType]
+      .map(sub => `<option value="${sub}">${sub}</option>`).join('');
+
+  let hint = document.getElementById(subIssueId + '-hint');
+  if (!hint) {
+    hint = document.createElement('small');
+    hint.id = subIssueId + '-hint';
+    hint.style.fontSize = '0.75rem';
+    hint.style.textTransform = 'none';
+    hint.style.color = '#999';
+    hint.style.marginTop = '4px';
+    hint.style.display = 'block';
+    document.getElementById(subIssueId).parentElement.appendChild(hint);
+  }
+
+  document.getElementById(subIssueId).addEventListener('change', function () {
     const selected = this.value;
     hint.textContent = descriptionMap[selected] || '';
   });
