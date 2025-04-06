@@ -194,14 +194,13 @@
               ${boothTypes.map(bt => `<option value="${bt}">${bt}</option>`).join('')}
             </select>
           </label>
-          <label>Issue Type 
-            <select onchange="updateSubIssues(this, 'subIssue${i}')" required>
-              <option value="">-- Select --</option>
+          <label>Issue Type <select onchange="updateSubIssues(this, 'subIssue${i}')" required>
+              <option value="">Select the type of issue</option>
               ${Object.keys(issueTypes).map(it => `<option value="${it}">${it}</option>`).join('')}
             </select>
           </label>
           <label>Sub-Issue Type <select id="subIssue${i}" required>
-              <option value="">--</option>
+              <option value="">Select a more specific issue</option>
             </select>
           </label>
           <label>Description (optional) <textarea rows="3"></textarea></label>
@@ -213,10 +212,8 @@
     function updateSubIssues(selectElem, subIssueId) {
   const selectedType = selectElem.value;
   const subIssueSelect = document.getElementById(subIssueId);
-  subIssueSelect.innerHTML = issueTypes[selectedType]
-    .map(sub => `<option value="${sub}">${sub}</option>`).join('');
-
   const descriptionMap = {
+    // Door Issue
     "Misalignment": "Door doesn’t sit properly within the frame; uneven gaps",
     "Hitting Frame": "Door makes contact with frame when opening/closing",
     "Does not Close Fully": "Door won’t latch or stay closed",
@@ -224,27 +221,57 @@
     "Hinge Defect": "Loose, squeaky, or bent hinges",
     "Handle Issue": "Handle is loose, missing, or not functioning properly",
     "Door Closer Malfunction": "Door doesn’t soft-close or swings too fast",
-    "Door Scratched/Damaged": "Cosmetic or transit damage"
+    "Door Scratched/Damaged": "Cosmetic or transit damage",
+    // Power Issue
+    "Booth not powering on": "Entire booth non-functional at delivery or post-install",
+    "Outlet Not Working": "No output from under-desk plug",
+    "Intermittent Power Loss": "Power cuts in/out unexpectedly",
+    "Fan or Light Not Receiving Power": "Localized issue affecting fan or light",
+    // Light Issue
+    "Light Not Working": "Light does not turn on when switch is used",
+    "Flickering Light": "Light flickers intermittently during use",
+    "Poor Brightness": "Light is dim or not bright enough",
+    "Switch Not Functioning": "Switch doesn't respond or is stuck",
+    "Light Cover Issue": "Cover is cracked, loose, or damaged",
+    // Fan Issue
+    "Fan Not Working": "No airflow or fan doesn't activate",
+    "Fan Operating at Low Power": "Fan turns on but barely moves air",
+    "Fan Speed Not Adjustable": "Speed settings have no effect",
+    "Fan Turns Off Unexpectedly": "Fan stops running randomly",
+    "Fan Noisy / Rattling": "Unusual buzzing or rattling sound from fan",
+    "Overheating / Poor Ventilation": "Booth becomes uncomfortably hot during use",
+    // Panel Issue
+    "Panel Misalignment": "Panels do not line up correctly",
+    "Panel Coming Loose": "Panels are detaching or unstable",
+    // Glass Issue
+    "Glass Cracked or Broken": "Visible cracks or complete breakage in glass",
+    "Scratched Glass": "Surface scratches visible on glass",
+    // Assembly Issue
+    "Uneven floor leveling": "Booth is not level due to floor or leg setup",
+    "Missing screws or hardware": "Parts not included or misplaced during assembly"
   };
 
-  const existingHint = document.getElementById(subIssueId + '-hint');
-  if (existingHint) existingHint.remove();
+  subIssueSelect.innerHTML = '<option value="">Select a more specific issue</option>' +
+    issueTypes[selectedType]
+      .map(sub => `<option value="${sub}">${sub}</option>`).join('');
 
-  const hint = document.createElement('small');
-  hint.id = subIssueId + '-hint';
-  hint.style.fontSize = '0.75rem';
-  hint.style.textTransform = 'none';
-  hint.style.color = '#999';
-  hint.style.marginTop = '4px';
-  hint.style.display = 'block';
+  let hint = document.getElementById(subIssueId + '-hint');
+  if (!hint) {
+    hint = document.createElement('small');
+    hint.id = subIssueId + '-hint';
+    hint.style.fontSize = '0.75rem';
+    hint.style.textTransform = 'none';
+    hint.style.color = '#999';
+    hint.style.marginTop = '4px';
+    hint.style.display = 'block';
+    subIssueSelect.parentElement.appendChild(hint);
+  }
 
   subIssueSelect.addEventListener('change', function () {
     const selected = this.value;
     hint.textContent = descriptionMap[selected] || '';
-    if (!hint.isConnected) {
-      this.parentElement.appendChild(hint);
-    }
   });
+} );
 }  
 </script>
 </body>
