@@ -219,7 +219,7 @@ button:hover {
               ${boothTypes.map(bt => `<option value="${bt}">${bt}</option>`).join('')}
             </select>
           </label>
-          <label>Issue Type <select onchange="updateSubIssues(this, 'subIssue${i}')" required>
+          <label>Issue Type <select onchange="updateSubIssues(this, 'subIssue" + i + "')" required>
               <option value="" disabled selected style="color: #999;">Select the type of issue</option>
               ${Object.keys(issueTypes).map(it => `<option value="${it}">${it}</option>`).join('')}
             </select>
