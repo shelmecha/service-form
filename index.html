@@ -211,11 +211,40 @@
     });
 
     function updateSubIssues(selectElem, subIssueId) {
-      const selectedType = selectElem.value;
-      const subIssueSelect = document.getElementById(subIssueId);
-      subIssueSelect.innerHTML = issueTypes[selectedType]
-        .map(sub => `<option value="${sub}">${sub}</option>`).join('');
+  const selectedType = selectElem.value;
+  const subIssueSelect = document.getElementById(subIssueId);
+  subIssueSelect.innerHTML = issueTypes[selectedType]
+    .map(sub => `<option value="${sub}">${sub}</option>`).join('');
+
+  const descriptionMap = {
+    "Misalignment": "Door doesn’t sit properly within the frame; uneven gaps",
+    "Hitting Frame": "Door makes contact with frame when opening/closing",
+    "Does not Close Fully": "Door won’t latch or stay closed",
+    "Hard to Open/Close": "Requires excessive force to move",
+    "Hinge Defect": "Loose, squeaky, or bent hinges",
+    "Handle Issue": "Handle is loose, missing, or not functioning properly",
+    "Door Closer Malfunction": "Door doesn’t soft-close or swings too fast",
+    "Door Scratched/Damaged": "Cosmetic or transit damage"
+  };
+
+  const existingHint = document.getElementById(subIssueId + '-hint');
+  if (existingHint) existingHint.remove();
+
+  const hint = document.createElement('small');
+  hint.id = subIssueId + '-hint';
+  hint.style.fontSize = '0.75rem';
+  hint.style.color = '#999';
+  hint.style.marginTop = '4px';
+  hint.style.display = 'block';
+
+  subIssueSelect.addEventListener('change', function () {
+    const selected = this.value;
+    hint.textContent = descriptionMap[selected] || '';
+    if (!hint.isConnected) {
+      this.parentElement.appendChild(hint);
     }
-  </script>
+  });
+}  
+</script>
 </body>
 </html>
