@@ -87,7 +87,36 @@
       display: block;
       margin-top: 0.25rem;
     }
-  </style>
+      .file-upload {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 560px;
+      height: 140px;
+      margin-top: 0.5rem;
+      border: 2px dashed #d1d5db;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      cursor: pointer;
+      transition: border-color 0.2s ease-in-out;
+    }
+    .file-upload:hover {
+      border-color: #a5b4fc;
+    }
+    .file-upload input[type="file"] {
+      opacity: 0;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+    .file-upload span {
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+</style>
 </head>
 <body>
   <form id="serviceForm">
@@ -108,13 +137,17 @@
     <div id="boothFields"></div>
 
     <label>Booth Installation or Delivery Date <span style="color: red">*</span><input type="date" required></label>
-    <small style="margin-left: 2px;">We need this to check if the booth is still under warranty and to identify the booth series for future improvements.</small>
+    <small style="margin-top: 0.4rem; margin-bottom: 0.75rem; display: block; max-width: 560px;">We need this to check if the booth is still under warranty and to identify the booth series for future improvements.</small>
 
     <label>Booth Serial Number (optional) <input type="text"></label>
     <label>Point of Contact <span style="color: red">*</span><input type="text" required></label>
     <label>Phone Number <span style="color: red">*</span><input type="tel" required></label>
     <label>Availability (this week & next) <span style="color: red">*</span><input type="text" required></label>
-    <label>Attachments or Photo Links <input type="text"></label>
+    <label>Attachments or Photo Links</label>
+    <div class="file-upload">
+      <input type="file" id="fileInput" multiple>
+      <span>Browse or drag files here</span>
+    </div>
 
     <button type="submit">Submit</button>
   </form>
