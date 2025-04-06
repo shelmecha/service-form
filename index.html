@@ -10,9 +10,8 @@
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #f6f5f4;
+      background-color: #ffffff;
       color: #2f2f2f;
-      max-width: 100%;
       margin: 0;
       padding: 1.5rem;
       display: flex;
@@ -24,16 +23,19 @@
       background: white;
       padding: 2rem;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
     h2 {
       font-size: 1.75rem;
       margin-bottom: 1.25rem;
+      text-transform: uppercase;
     }
     label {
-      font-weight: 500;
+      font-weight: 600;
       display: block;
-      margin-top: 1rem;
+      margin-top: 1.5rem;
+      text-transform: uppercase;
+      font-size: 0.875rem;
     }
     input, select, textarea {
       width: 100%;
@@ -44,10 +46,11 @@
       background-color: #fff;
       font-family: 'Inter', sans-serif;
       font-size: 1rem;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
     input:focus, select:focus, textarea:focus {
-      border-color: #6366f1;
+      border-color: #d1d5db;
+      box-shadow: 0 0 0 1px #d1d5db;
       outline: none;
     }
     input[type="date"]::-webkit-datetime-edit,
@@ -55,9 +58,9 @@
       font-family: 'Inter', sans-serif;
     }
     .booth-section {
-      background: #f3f2ef;
+      background: #f9f9f9;
       padding: 1rem;
-      border-left: 4px solid #e5e4e2;
+      border-left: 4px solid #e5e7eb;
       border-radius: 8px;
       margin-top: 1.5rem;
     }
@@ -153,7 +156,7 @@
         const boothDiv = document.createElement('div');
         boothDiv.classList.add('booth-section');
         boothDiv.innerHTML = `
-          <h4>Booth #${i}</h4>
+          <h4 style="margin: 0 0 1rem 0; font-weight: 600;">Booth #${i}</h4>
           <label>Booth Type 
             <select required>
               ${boothTypes.map(bt => `<option value="${bt}">${bt}</option>`).join('')}
