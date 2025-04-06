@@ -93,10 +93,9 @@
   <form id="serviceForm">
     <h2 style="text-transform: none;">Service Request Form</h2>
 
-    <label>Company Name <input type="text" name="company" required></label>
-    <label>Address <input type="text" name="address" required></label>
-    <label>Number of Booths with Issues 
-      <select id="boothCount" required>
+    <label>Company Name <span style="color: red">*</span><input type="text" name="company" required></label>
+    <label>Address <span style="color: red">*</span><input type="text" name="address" required></label>
+    <label>Number of Booths with Issues <span style="color: red">*</span><select id="boothCount" required>
         <option value="">-- Select --</option>
         <option value="1">1</option>
         <option value="2">2</option>
@@ -108,13 +107,13 @@
 
     <div id="boothFields"></div>
 
-    <label>Booth Installation or Delivery Date <input type="date" required></label>
+    <label>Booth Installation or Delivery Date <span style="color: red">*</span><input type="date" required></label>
     <small style="margin-left: 2px;">We need this to check if the booth is still under warranty and to identify the booth series for future improvements.</small>
 
     <label>Booth Serial Number (optional) <input type="text"></label>
-    <label>Point of Contact <input type="text" required></label>
-    <label>Phone Number <input type="tel" required></label>
-    <label>Availability (this week & next) <input type="text" required></label>
+    <label>Point of Contact <span style="color: red">*</span><input type="text" required></label>
+    <label>Phone Number <span style="color: red">*</span><input type="tel" required></label>
+    <label>Availability (this week & next) <span style="color: red">*</span><input type="text" required></label>
     <label>Attachments or Photo Links <input type="text"></label>
 
     <button type="submit">Submit</button>
