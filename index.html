@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Service Request Form</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f6f5f4;
+      color: #2f2f2f;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      background: white;
+    }
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+    label {
+      font-weight: 500;
+      margin-top: 1rem;
+      display: block;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.3rem;
+      border: 1px solid #d1d1d1;
+      border-radius: 6px;
+      font-size: 1rem;
+      background-color: #fff;
+    }
+    .booth-section {
+      background: #f3f2ef;
+      padding: 1rem;
+      border-left: 4px solid #e5e4e2;
+      border-radius: 8px;
+      margin-top: 1.5rem;
+    }
+    button {
+      margin-top: 2rem;
+      padding: 0.8rem 1.5rem;
+      background-color: #000;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #333;
+    }
+    small {
+      font-size: 0.9rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h2>Service Request Form</h2>
+
+  <form id="serviceForm">
+    <label>Company Name* <input type="text" name="company" required></label>
+    <label>Address* <input type="text" name="address" required></label>
+    <label>Number of Booths with Issues* 
+      <select id="boothCount" required>
+        <option value="">-- Select --</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </label>
+
+    <div id="boothFields"></div>
+
+    <label>Booth Installation or Delivery Date* <input type="date" required></label>
+    <small>We need this to check if the booth is still under warranty and to identify the booth series for future improvements.</small>
+
+    <label>Booth Serial Number (optional) <input type="text"></label>
+    <label>Point of Contact* <input type="text" required></label>
+    <label>Phone Number* <input type="tel" required></label>
+    <label>Availability (this week & next)* <input type="text" required></label>
+    <label>Attachments or Photo Links <input type="text"></label>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const issueTypes = {
+      "Door Issue": [
+        "Misalignment", "Hitting Frame", "Does not Close Fully", "Hard to Open/Close",
+        "Hinge Defect", "Handle Issue", "Door Closer Malfunction", "Door Scratched/Damaged"
+      ],
+      "Power Issue": [
+        "Booth not powering on", "Outlet Not Working", "Intermittent Power Loss", "Fan or Light Not Receiving Power"
+      ],
+      "Light Issue": [
+        "Light Not Working", "Flickering Light", "Poor Brightness", "Switch Not Functioning", "Light Cover Issue"
+      ],
+      "Fan Issue": [
+        "Fan Not Working", "Fan Operating at Low Power", "Fan Speed Not Adjustable",
+        "Fan Turns Off Unexpectedly", "Fan Noisy / Rattling", "Overheating / Poor Ventilation"
+      ],
+      "Panel Issue": ["Panel Misalignment", "Panel Coming Loose"],
+      "Glass Issue": ["Glass Cracked or Broken", "Scratched Glass"],
+      "Assembly Issue": ["Uneven floor leveling", "Missing screws or hardware"]
+    };
+
+    const boothTypes = [
+      "Team", "Quad", "ONE+/TWO", "ONE", "TWO+", "TUESDAY", "TUESDAY+", 
+      "QUAD ADA", "TEAM ADA", "Clubhouse", "Accessible", "Accessible Plus"
+    ];
+
+    const boothCountSelect = document.getElementById('boothCount');
+    const boothFields = document.getElementById('boothFields');
+
+    boothCountSelect.addEventListener('change', () => {
+      boothFields.innerHTML = '';
+      const count = parseInt(boothCountSelect.value);
+      for (let i = 1; i <= count; i++) {
+        const boothDiv = document.createElement('div');
+        boothDiv.classList.add('booth-section');
+        boothDiv.innerHTML = `
+          <h4>Booth #${i}</h4>
+          <label>Booth Type* 
+            <select required>
+              ${boothTypes.map(bt => `<option value="${bt}">${bt}</option>`).join('')}
+            </select>
+          </label>
+          <label>Issue Type* 
+            <select onchange="updateSubIssues(this, 'subIssue${i}')" required>
+              <option value="">-- Select --</option>
+              ${Object.keys(issueTypes).map(it => `<option value="${it}">${it}</option>`).join('')}
+            </select>
+          </label>
+          <label>Sub-Issue Type*
+            <select id="subIssue${i}" required>
+              <option value="">-- Select Issue Type First --</option>
+            </select>
+          </label>
+          <label>Description (optional) <input type="text"></label>
+        `;
+        boothFields.appendChild(boothDiv);
+      }
+    });
+
+    function updateSubIssues(selectElem, subIssueId) {
+      const selectedType = selectElem.value;
+      const subIssueSelect = document.getElementById(subIssueId);
+      subIssueSelect.innerHTML = issueTypes[selectedType]
+        .map(sub => `<option value="${sub}">${sub}</option>`).join('');
+    }
+  </script>
+</body>
+</html>
