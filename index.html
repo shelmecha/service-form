@@ -219,16 +219,13 @@ button:hover {
               ${boothTypes.map(bt => `<option value="${bt}">${bt}</option>`).join('')}
             </select>
           </label>
-          <label>Issue Type <select onchange="updateSubIssues(this, 'subIssue" + i + "')" required>
-              <option value="" disabled selected style="color: #999;">Select the type of issue</option>
-              ${Object.keys(issueTypes).map(it => `<option value="${it}">${it}</option>`).join('')}
+          <label>How many issues? <select id="issueCount${i}" onchange="showIssues(${i})" required>
+              <option value="" disabled selected style="color: #999;">Select number of issues</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
             </select>
           </label>
-          <label>Sub-Issue Type <select id="subIssue${i}" required style="color: #999;">
-              <option value="" disabled selected style="color: #999;">Select a more specific issue</option>
-            </select>
-          </label>
-          <label>Description (optional) <textarea rows="3" placeholder="Add more context or details here..."></textarea></label>
+          <div id="issueFields${i}"></div>
         `;
         boothFields.appendChild(boothDiv);
   }
@@ -290,6 +287,27 @@ function updateSubIssues(selectElem, subIssueId) {
     const selected = this.value;
     hint.textContent = descriptionMap[selected] || '';
   });
+}
+function showIssues(index) {
+  const issueFields = document.getElementById('issueFields' + index);
+  const count = parseInt(document.getElementById('issueCount' + index).value);
+  issueFields.innerHTML = '';
+
+  for (let j = 1; j <= count; j++) {
+    const div = document.createElement('div');
+    div.innerHTML = `
+      <label>Issue Type <select onchange="updateSubIssues(this, 'subIssue${index}_${j}')" required>
+          <option value="" disabled selected style="color: #999;">Select the type of issue</option>
+          ${Object.keys(issueTypes).map(it => `<option value="${it}">${it}</option>`).join('')}
+        </select>
+      </label>
+      <label>Sub-Issue Type <select id="subIssue${index}_${j}" required style="color: #999;">
+          <option value="" disabled selected style="color: #999;">Select a more specific issue</option>
+        </select>
+    </label>
+    `;
+    issueFields.appendChild(div);
+  }
 }
 </script>
 </body>
