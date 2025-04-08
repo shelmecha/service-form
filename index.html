@@ -249,6 +249,54 @@
     const subIssueSelect = document.getElementById(subIssueId);
     subIssueSelect.innerHTML = '<option value="" disabled selected>Select a more specific issue</option>' +
       issueTypes[selectedType].map(sub => `<option value="${sub}">${sub}</option>`).join('');
+
+    let hint = document.getElementById(subIssueId + '-hint');
+    if (!hint) {
+      hint = document.createElement('small');
+      hint.id = subIssueId + '-hint';
+      hint.style.fontSize = '0.75rem';
+      hint.style.textTransform = 'none';
+      hint.style.color = '#999';
+      hint.style.marginTop = '4px';
+      hint.style.display = 'block';
+      subIssueSelect.parentElement.appendChild(hint);
+    }
+
+    subIssueSelect.addEventListener('change', function () {
+      const descriptionMap = {
+        "Misalignment": "Door doesn’t sit properly within the frame; uneven gaps",
+        "Hitting Frame": "Door makes contact with frame when opening/closing",
+        "Does not Close Fully": "Door won’t latch or stay closed",
+        "Hard to Open/Close": "Requires excessive force to move",
+        "Hinge Defect": "Loose, squeaky, or bent hinges",
+        "Handle Issue": "Handle is loose, missing, or not functioning properly",
+        "Door Closer Malfunction": "Door doesn’t soft-close or swings too fast",
+        "Door Scratched/Damaged": "Cosmetic or transit damage",
+        "Booth not powering on": "No power reaching the booth at all",
+        "Outlet Not Working": "Power outlet under the desk is not functioning",
+        "Intermittent Power Loss": "Power randomly cuts in and out",
+        "Light Not Working": "Light does not turn on",
+        "Flickering Light": "Light flickers during use",
+        "Poor Brightness": "Light is dim or uneven",
+        "Switch Wobbly": "Light switch is loose or unsteady",
+        "Light Cover Issue": "Cover is missing, cracked, or damaged",
+        "Light Not Receiving Power": "Power not reaching the light component",
+        "Fan Not Working": "Fan doesn’t turn on",
+        "Fan Operating at Low Power": "Fan runs very slowly",
+        "Fan Speed Not Adjustable": "Control does not affect fan speed",
+        "Fan Turns Off Unexpectedly": "Fan shuts off randomly",
+        "Fan Noisy / Rattling": "Fan makes unusual noise during use",
+        "Overheating / Poor Ventilation": "Booth gets hot due to airflow issue",
+        "Fan Not Receiving Power": "Power not reaching the fan",
+        "Panel Misalignment": "Panel edges don’t align correctly",
+        "Panel Coming Loose": "Panel is detached or shifting",
+        "Glass Cracked": "Glass is broken or shattered",
+        "Scratched Glass": "Glass has visible scratches",
+        "Uneven Floor": "Booth floor is not level",
+        "Missing Screws": "Some screws were not installed"
+      };
+      hint.textContent = descriptionMap[this.value] || '';
+    });
   }
 </script>
 </body>
