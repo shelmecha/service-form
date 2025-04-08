@@ -1,3 +1,4 @@
+<!-- FIXED VERSION -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -138,9 +139,18 @@
 <body>
   <form id="serviceForm">
     <h2>Service Request Form</h2>
-    <label>Company Name <span style="color: red">*</span><input type="text" name="company" required></label>
-    <label>Address <span style="color: red">*</span><input type="text" name="address" required></label>
-    <label>Number of Booths with Issues <span style="color: red">*</span>
+    <label>Company Name <input type="text" name="company" required></label>
+    <label>Address <input type="text" name="address" required></label>
+    <label>Country
+      <select name="country" required>
+        <option value="" disabled selected>Select your country</option>
+        <option value="Canada">Canada</option>
+        <option value="USA">USA</option>
+        <option value="UK">UK</option>
+        <option value="Australia">Australia</option>
+      </select>
+    </label>
+    <label>Number of Booths with Issues 
       <select id="boothCount" required>
         <option value="" disabled selected>Select the number of booths affected</option>
         <option value="1">1</option>
@@ -150,128 +160,96 @@
         <option value="5">5</option>
       </select>
     </label>
+    <label>Issue Description
+      <textarea name="description" rows="4" placeholder="Add any extra details you think we should know..."></textarea>
+    </label>
     <div id="boothFields"></div>
-    <label>Booth Installation or Delivery Date <span style="color: red">*</span><input type="date" required></label>
+    <label>Booth Installation or Delivery Date <input type="date" required></label>
     <small>We need this to check if the booth is still under warranty and to identify the booth series for future improvements.</small>
-    <label>Booth Serial Number (optional) <input type="text"></label>
-    <label>Point of Contact <span style="color: red">*</span><input type="text" required></label>
-    <label>Phone Number <span style="color: red">*</span><input type="tel" required></label>
-    <label>Availability (this week & next) <span style="color: red">*</span><input type="text" required></label>
+    <label>Booth Serial Number <input type="text"></label>
+    <small>You can find the serial number below the carpet or at the back of the booth. <a href="https://northlower.notion.site/Booth-Serial-Number-1cf2f6847dac805f8e0df7a1f279f54b?pvs=4" target="_blank" style="font-weight: 600; color: #6b7280;">Click here</a> to learn more.</small>
+    <label>Point of Contact<input type="text" required></label>
+    <label>Phone Number<input type="tel" required></label>
+    <label>Availability<input type="text" required></label>
     <label>Attachments or Photo Links</label>
+    <label><input type="url" placeholder="https://..." /></label>
     <div class="file-upload" style="max-width: 100%;">
       <input type="file" id="fileInput" multiple>
       <span>Browse or drag files here</span>
     </div>
     <button type="submit">Submit</button>
   </form>
-  <script>
-    const issueTypes = {
-      "Door Issue": ["Misalignment", "Hitting Frame", "Does not Close Fully", "Hard to Open/Close", "Hinge Defect", "Handle Issue", "Door Closer Malfunction", "Door Scratched/Damaged"],
-      "Power Issue": ["Booth not powering on", "Outlet Not Working", "Intermittent Power Loss", "Fan or Light Not Receiving Power"],
-      "Light Issue": ["Light Not Working", "Flickering Light", "Poor Brightness", "Switch Not Functioning", "Light Cover Issue"],
-      "Fan Issue": ["Fan Not Working", "Fan Operating at Low Power", "Fan Speed Not Adjustable", "Fan Turns Off Unexpectedly", "Fan Noisy / Rattling", "Overheating / Poor Ventilation"],
-      "Panel Issue": ["Panel Misalignment", "Panel Coming Loose"],
-      "Glass Issue": ["Glass Cracked or Broken", "Scratched Glass"],
-      "Assembly Issue": ["Uneven floor leveling", "Missing screws or hardware"]
-    };
+<script>
+  const issueTypes = {
+    "Door Issue": ["Misalignment", "Hitting Frame", "Does not Close Fully", "Hard to Open/Close", "Hinge Defect", "Handle Issue", "Door Closer Malfunction", "Door Scratched/Damaged"],
+    "Power Issue": ["Booth not powering on", "Outlet Not Working", "Intermittent Power Loss"],
+    "Light Issue": ["Light Not Working", "Flickering Light", "Poor Brightness", "Switch Wobbly", "Light Cover Issue", "Light Not Receiving Power"],
+    "Fan Issue": ["Fan Not Working", "Fan Operating at Low Power", "Fan Speed Not Adjustable", "Fan Turns Off Unexpectedly", "Fan Noisy / Rattling", "Overheating / Poor Ventilation", "Fan Not Receiving Power"],
+    "Panel Issue": ["Panel Misalignment", "Panel Coming Loose"],
+    "Glass Issue": ["Glass Cracked", "Scratched Glass"],
+    "Assembly Issue": ["Uneven Floor", "Missing Screws"]
+  };
 
-    const boothTypes = ["Team", "Quad", "ONE+/TWO", "ONE", "TWO+", "TUESDAY", "TUESDAY+", "QUAD ADA", "TEAM ADA", "Clubhouse", "Accessible", "Accessible Plus"];
+  const boothTypesByCountry = {
+  default: [
+    "Team", "Quad", "ONE+/TWO", "ONE", "TWO+",
+    "TUESDAY", "TUESDAY+", "QUAD ADA", "TEAM ADA",
+    "Clubhouse", "Accessible", "Accessible Plus"
+  ],
+  AU: [
+    "Small Booth", "Medium Booth", "Large Booth", "Extra Large Booth",
+    "Tuesday Booth", "Tuesday+ Booth", "Large Accessible Booth", "Extra Large Accessible Booth"
+  ],
+  UK: [
+    "Small Booth", "Medium Booth", "Large Booth", "Extra Large Booth",
+    "Tuesday Booth", "Tuesday+ Booth", "Large Accessible Booth", "Extra Large Accessible Booth"
+  ]
+};
 
-    const boothCountSelect = document.getElementById('boothCount');
-    const boothFields = document.getElementById('boothFields');
+  const boothCountSelect = document.getElementById('boothCount');
+  const boothFields = document.getElementById('boothFields');
 
-    boothCountSelect.addEventListener('change', () => {
-      boothCountSelect.style.color = '#2f2f2f';
-      boothFields.innerHTML = '';
-      const count = parseInt(boothCountSelect.value);
-      for (let i = 1; i <= count; i++) {
-        const boothDiv = document.createElement('div');
-        boothDiv.classList.add('booth-section');
-        boothDiv.innerHTML = `
-          <h4 style="margin: 0 0 1rem 0; font-weight: 600;">Booth #${i}</h4>
-          <label>Booth Type <select required>
-              <option value="" disabled selected>Select booth type</option>
-              ${boothTypes.map(bt => `<option value="${bt}">${bt}</option>`).join('')}
-            </select>
-          </label>
-          <label>How many issues? <select id="issueCount${i}" onchange="showIssues(${i})" required>
-              <option value="" disabled selected>Select number of issues</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-            </select>
-          </label>
-          <div id="issueFields${i}"></div>
-        `;
-        boothFields.appendChild(boothDiv);
-      }
-    });
+  boothCountSelect.addEventListener('change', () => {
+    boothFields.innerHTML = '';
+    const count = parseInt(boothCountSelect.value);
+    for (let i = 1; i <= count; i++) {
+      const boothDiv = document.createElement('div');
+      boothDiv.classList.add('booth-section');
+      const country = document.querySelector('select[name="country"]').value;
+      const boothTypes = boothTypesByCountry[country === 'Australia' ? 'AU' : country === 'UK' ? 'UK' : 'default'];
 
-    function showIssues(index) {
-      const issueFields = document.getElementById('issueFields' + index);
-      const count = parseInt(document.getElementById('issueCount' + index).value);
-      issueFields.innerHTML = '';
-      for (let j = 1; j <= count; j++) {
-        const div = document.createElement('div');
-        div.classList.add('nested-issue-block');
-        div.style.marginTop = '2rem';
-        div.innerHTML = `
-          <label>Issue Type ${j} <select onchange="updateSubIssues(this, 'subIssue${index}_${j}')" required>
-              <option value="" disabled selected>Select the type of issue</option>
-              ${Object.keys(issueTypes).map(it => `<option value="${it}">${it}</option>`).join('')}
-            </select>
-          </label>
-          
-          <label>Sub-Issue Type ${j} <select id="subIssue${index}_${j}" required>
-              <option value="" disabled selected>Select a more specific issue</option>
-            </select>
-          </label>
-        `;
-        issueFields.appendChild(div);
-        if (j < count) {
-          const divider = document.createElement('hr');
-          divider.style.margin = '2rem 0';
-          divider.style.border = 'none';
-          divider.style.borderTop = '1px solid #ddd';
-          issueFields.appendChild(divider);
-        }
-      }
+      boothDiv.innerHTML = `
+        <h4 style="margin: 0 0 1rem 0; font-weight: 600;">Booth #${i}</h4>
+        <label>Booth Type
+          <select required>
+            <option value="" disabled selected>Select booth type</option>
+            ${boothTypes.map(bt => `<option value="${bt}">${bt}</option>`).join('')}
+          </select>
+        </label>
+          </select>
+        </label>
+        <label>Issue Type
+          <select onchange="updateSubIssues(this, 'subIssue${i}')" required>
+            <option value="" disabled selected>Select the type of issue</option>
+            ${Object.keys(issueTypes).map(it => `<option value="${it}">${it}</option>`).join('')}
+          </select>
+        </label>
+        <label>Sub-Issue Type
+          <select id="subIssue${i}" required>
+            <option value="" disabled selected>Select a more specific issue</option>
+          </select>
+        </label>
+      `;
+      boothFields.appendChild(boothDiv);
     }
+  });
 
-    function updateSubIssues(selectElem, subIssueId) {
-      const selectedType = selectElem.value;
-      const subIssueSelect = document.getElementById(subIssueId);
-      const descriptionMap = {
-        "Misalignment": "Door doesn’t sit properly within the frame; uneven gaps",
-        "Hitting Frame": "Door makes contact with frame when opening/closing",
-        "Does not Close Fully": "Door won’t latch or stay closed",
-        "Hard to Open/Close": "Requires excessive force to move",
-        "Hinge Defect": "Loose, squeaky, or bent hinges",
-        "Handle Issue": "Handle is loose, missing, or not functioning properly",
-        "Door Closer Malfunction": "Door doesn’t soft-close or swings too fast",
-        "Door Scratched/Damaged": "Cosmetic or transit damage"
-      };
-      subIssueSelect.innerHTML = '<option value="" disabled selected>Select a more specific issue</option>' +
-        issueTypes[selectedType].map(sub => `<option value="${sub}">${sub}</option>`).join('');
-      let hint = document.getElementById(subIssueId + '-hint');
-      if (!hint) {
-        hint = document.createElement('small');
-        hint.id = subIssueId + '-hint';
-        hint.style.fontSize = '0.75rem';
-        hint.style.textTransform = 'none';
-        hint.style.color = '#999';
-        hint.style.marginTop = '4px';
-        hint.style.display = 'block';
-        subIssueSelect.parentElement.appendChild(hint);
-      }
-      subIssueSelect.addEventListener('change', function () {
-        const selected = this.value;
-        hint.textContent = descriptionMap[selected] || '';
-        this.style.color = '#2f2f2f';
-      });
-    }
-  </script>
+  function updateSubIssues(selectElem, subIssueId) {
+    const selectedType = selectElem.value;
+    const subIssueSelect = document.getElementById(subIssueId);
+    subIssueSelect.innerHTML = '<option value="" disabled selected>Select a more specific issue</option>' +
+      issueTypes[selectedType].map(sub => `<option value="${sub}">${sub}</option>`).join('');
+  }
+</script>
 </body>
 </html>
